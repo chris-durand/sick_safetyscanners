@@ -66,6 +66,8 @@ SickSafetyscannersRos::SickSafetyscannersRos()
     m_nh.advertise<sick_safetyscanners::OutputPathsMsg>("output_paths", 100);
   m_field_service_server =
     m_nh.advertiseService("field_data", &SickSafetyscannersRos::getFieldData, this);
+  m_status_service_server =
+    m_nh.advertiseService("status_overview", &SickSafetyscannersRos::getStatusOverview, this);
 
   // Diagnostics for frequency
   m_diagnostic_updater.setHardwareID(m_communication_settings.getSensorIp().to_string());
@@ -829,5 +831,30 @@ bool SickSafetyscannersRos::getFieldData(sick_safetyscanners::FieldData::Request
   return true;
 }
 
+bool SickSafetyscannersRos::getStatusOverview(sick_safetyscanners::StatusOverview::Request& req,
+                                              sick_safetyscanners::StatusOverview::Response& res)
+{
+  sick::datastructure::StatusOverview status_overview;
+  m_device->requestStatusOverview(m_communication_settings, status_overview);
+
+  res.status.version_version       = status_overview.getVersionCVersion();
+  res.status.version_major_version = status_overview.getVersionMajorVersionNumber();
+  res.status.version_minor_version = status_overview.getVersionMinorVersionNumber();
+  res.status.version_release       = status_overview.getVersionReleaseNumber();
+
+  res.status.device_state      = status_overview.getDeviceState();
+  res.status.config_state      = status_overview.getConfigState();
+  res.status.application_state = status_overview.getApplicationState();
+
+  res.status.power_on_count = status_overview.getCurrentTimePowerOnCount();
+  res.status.current_time   = status_overview.getCurrentTimeTime();
+  res.status.current_date   = status_overview.getCurrentTimeDate();
+
+  res.status.error_code = status_overview.getErrorInfoCode();
+  res.status.error_time = status_overview.getErrorInfoTime();
+  res.status.error_date = status_overview.getErrorInfoDate();
+
+  return true;
+}
 
 } // namespace sick

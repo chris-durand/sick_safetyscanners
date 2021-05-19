@@ -45,11 +45,13 @@ add_message_files(
   OutputPathsMsg.msg
   RawMicroScanDataMsg.msg
   ScanPointMsg.msg
+  StatusOverviewMsg.msg
 )
 
 add_service_files(
   FILES
   FieldData.srv
+  StatusOverview.srv
 )
 
 generate_messages(

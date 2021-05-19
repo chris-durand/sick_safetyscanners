@@ -54,6 +54,7 @@
 #include <sick_safetyscanners/RawMicroScanDataMsg.h>
 #include <sick_safetyscanners/SickSafetyscanners.h>
 #include <sick_safetyscanners/SickSafetyscannersConfigurationConfig.h>
+#include <sick_safetyscanners/StatusOverview.h>
 #include <sick_safetyscanners/datastructure/CommSettings.h>
 #include <sick_safetyscanners/datastructure/FieldData.h>
 
@@ -140,6 +141,7 @@ private:
   void sensorDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& diagnostic_status);
 
   ros::ServiceServer m_field_service_server;
+  ros::ServiceServer m_status_service_server;
 
   bool m_initialised;
 
@@ -220,6 +222,9 @@ private:
 
   bool getFieldData(sick_safetyscanners::FieldData::Request& req,
                     sick_safetyscanners::FieldData::Response& res);
+
+  bool getStatusOverview(sick_safetyscanners::StatusOverview::Request& req,
+                         sick_safetyscanners::StatusOverview::Response& res);
 };
 
 } // namespace sick
